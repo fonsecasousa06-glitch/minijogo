@@ -6,6 +6,8 @@ px=5
 py=6
 sala="sala1.txt"
 inven=()
+vida=15
+mvida=15
 declare -A rmsv
 dx=0
 dy=1
@@ -36,6 +38,31 @@ drawin(){
         done
 }
 
+dvida(){
+
+	local lin=$(( ${#mapa[@]} + 9 ))
+	local barra=""
+
+	for (( i=1; i<=mvida; i++ )); do
+		if (( i<=vida )); then
+			barra+="♡"
+		else
+			barra+="!"
+		fi
+	done
+
+	tput cup $lin 0
+	printf "HP: [%s] %d/%d   " "$barra" "$vida" "$mvida"
+}
+
+morte() {
+
+	if (( vida <= 0 )); then
+		mudar "death.txt" 9 8
+		msg "Eu devia fazer uma conquista para algo tão estúpido"
+	fi
+}
+
 mudar() {
 
         rmsv["$sala"]=$(printf "%s\n" "${mapa[@]}")
@@ -57,6 +84,7 @@ mudar() {
         echo ""
         printf "[Setas] Mover|[Q] Sair|[E] Interagir|[1-5] Usar item"
         drawin
+	dvida
 }
 
 tra() {
@@ -72,12 +100,31 @@ tra() {
 
 
 dash() {
+
+local ox=$px
+local oy=$py
+
         for i in {1..3}; do
                 local nex=$((px + dx))
                 local ney=$((py + dy))
                 local dest="${mapa[$ney]:$nex:1}"
 
                 case "$dest" in
+			"!")
+				if [[ $i -eq 3 ]]; then
+					tput cup $py $px
+					echo -n "${mapa[$py]:$px:1}"
+					px=$ox
+					py=$oy
+					((vida -= 3))
+					(( vida < 0 )) && vida=0
+					dvida
+					msg "Errou"
+					morte
+					return
+				fi
+				;;
+
                         "#")
                                 [[ $i -eq 3 ]] && break ;;
 
@@ -93,6 +140,8 @@ dash() {
 					"sala4.txt:2,4") mudar "sala3.txt" 2 1; return ;;
 					"sala3.txt:39,0") mudar "sala4.txt" 39 3; return ;;
 					"sala4.txt:39,4") mudar "sala3.txt" 39 1; return ;;
+					"death.txt:6,13") exit 0 ;;
+					"death.txt:19,6") vida=$mvida; mudar "sala1.txt" 6 2; return ;;
                                 esac
                                 ;;
                 esac
@@ -220,12 +269,16 @@ usar() {
             esac ;;
 
         "Papel")
+	    unset 'inven[$idx]'
+	    drawin
             msg "Está escrito: 'com o F algumas paredes se tornam ar'" ;;
 
         "Pedra estranha")
 		if [[ "$alvo" == "@" ]]; then
 			apagar $vx $vy "."
 			printf "."
+			unset 'inven[$idx]'
+			drawin
 		else
 			msg "está pedra tem um formato perculiar"
 		fi
@@ -240,6 +293,8 @@ clear
 printf "%s\n" "${mapa[@]}"
 echo " "
 printf "[Setas] Mover|[Q] Sair|[E] interagir|[1-5] Usar Item"
+drawin
+dvida
 
 while true;
 do
@@ -272,6 +327,14 @@ do
         destino="${mapa[$newy]:$newx:1}"
 
         case "$destino" in
+		"!")
+			((vida -= 3))
+			(( vida < 0 )) && vida=0
+			dvida
+			msg "Cuidado com o buraco"
+			morte
+			;;
+
                 ".")
                         case "$sala:$newx,$newy" in
                         "sala1.txt:40,4")
@@ -297,6 +360,13 @@ do
 				continue;;
 			"sala4.txt:2,4")
 				mudar "sala3.txt" 2 1
+				continue;;
+			"death.txt:6,13")
+				break;;
+			"death.txt:19,6")
+				vida=$mvida
+				mudar "sala1.txt" 6 2
+				msg "Ih lá vamos nós!"
 				continue;;
                         esac
                         ;;
