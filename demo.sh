@@ -98,6 +98,29 @@ tra() {
         fi
 }
 
+menu() {
+
+	local menu
+	mapfile -t menu < "menu.txt"
+
+	clear
+	printf "%s\n" "${menu[@]}"
+
+	while true; do
+		read -rsn1 tela
+		if [[ "$tela" == "r" || "$tela" == "R" ]]; then
+			break
+		fi
+	done
+
+	clear
+	printf "%s\n" "${mapa[@]}"
+	echo ""
+	printf "[R] Menu"
+	drawin
+	dvida
+
+}
 
 dash() {
 
@@ -292,7 +315,7 @@ usar() {
 clear
 printf "%s\n" "${mapa[@]}"
 echo " "
-printf "[Setas] Mover|[Q] Sair|[E] interagir|[1-5] Usar Item"
+printf "[R] Menu"
 drawin
 dvida
 
@@ -315,10 +338,11 @@ do
         case "$tecla" in
                 w|W|$'\e[A'|$'\eOA') ((newy--)); dx=0; dy=-1 ;;
                 s|S|$'\e[B'|$'\eOB') ((newy++)); dx=0; dy=1 ;;
-                a|A|$'\e[C'|$'\eOC') ((newx++)); dx=1; dy=0 ;;
-                d|D|$'\e[D'|$'\eOD') ((newx--)); dx=-1; dy=0 ;;
+                d|D|$'\e[C'|$'\eOC') ((newx++)); dx=1; dy=0 ;;
+                a|A|$'\e[D'|$'\eOD') ((newx--)); dx=-1; dy=0 ;;
                 e|E) interagir; continue ;;
                 f|F) dash; continue;;
+		r|R) menu; continue;;
                 1|2|3|4|5) usar "$tecla"; continue ;;
                 q|Q) break ;;
                 *) continue ;;
