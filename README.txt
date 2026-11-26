@@ -12,9 +12,3 @@ Q para sair
 E para interagir(você vai sempre interagir na última direção
 que você tiver apertado)
 1 a 5 para usar os itens do inventário
-
-Um detalhe a se tornar é que as teclas WASD andam tambem,
-mas as teclas A e D estão trocadas pois se eu fizesse elas
-do jeito certo as setas direita e esquerda ficariam trocadas
-e eu prefiro usar as setas, então desculpe se isso estragar
-sua experiência.
