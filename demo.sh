@@ -23,7 +23,7 @@ inl() {
                 "sala1.txt:14,7") echo "Chave" ;;
                 "sala1.txt:31,3") echo "Machado" ;;
                 "sala2.txt:27,4")  echo "Pedra estranha" ;;
-		"sala3.txt:21,4") echo "Fim" ;;
+                "sala3.txt:21,4") echo "Fim" ;;
                 *) echo "" ;;
         esac
 }
@@ -40,27 +40,27 @@ drawin(){
 
 dvida(){
 
-	local lin=$(( ${#mapa[@]} + 9 ))
-	local barra=""
+        local lin=$(( ${#mapa[@]} + 9 ))
+        local barra=""
 
-	for (( i=1; i<=mvida; i++ )); do
-		if (( i<=vida )); then
-			barra+="♡"
-		else
-			barra+="!"
-		fi
-	done
+        for (( i=1; i<=mvida; i++ )); do
+                if (( i<=vida )); then
+                        barra+="♡"
+                else
+                        barra+="!"
+                fi
+        done
 
-	tput cup $lin 0
-	printf "HP: [%s] %d/%d   " "$barra" "$vida" "$mvida"
+        tput cup $lin 0
+        printf "HP: [%s] %d/%d   " "$barra" "$vida" "$mvida"
 }
 
 morte() {
 
-	if (( vida <= 0 )); then
-		mudar "death.txt" 9 8
-		msg "Eu devia fazer uma conquista para algo tão estúpido"
-	fi
+        if (( vida <= 0 )); then
+                mudar "death.txt" 9 8
+                msg "Eu devia fazer uma conquista para algo tão estúpido"
+        fi
 }
 
 mudar() {
@@ -84,7 +84,7 @@ mudar() {
         echo ""
         printf "[Setas] Mover|[Q] Sair|[E] Interagir|[1-5] Usar item"
         drawin
-	dvida
+        dvida
 }
 
 tra() {
@@ -100,25 +100,25 @@ tra() {
 
 menu() {
 
-	local menu
-	mapfile -t menu < "menu.txt"
+        local menu
+        mapfile -t menu < "menu.txt"
 
-	clear
-	printf "%s\n" "${menu[@]}"
+        clear
+        printf "%s\n" "${menu[@]}"
 
-	while true; do
-		read -rsn1 tela
-		if [[ "$tela" == "r" || "$tela" == "R" ]]; then
-			break
-		fi
-	done
+        while true; do
+                read -rsn1 tela
+                if [[ "$tela" == "r" || "$tela" == "R" ]]; then
+                        break
+                fi
+        done
 
-	clear
-	printf "%s\n" "${mapa[@]}"
-	echo ""
-	printf "[R] Menu"
-	drawin
-	dvida
+        clear
+        printf "%s\n" "${mapa[@]}"
+        echo ""
+        printf "[R] Menu"
+        drawin
+        dvida
 
 }
 
@@ -133,20 +133,20 @@ local oy=$py
                 local dest="${mapa[$ney]:$nex:1}"
 
                 case "$dest" in
-			"!")
-				if [[ $i -eq 3 ]]; then
-					tput cup $py $px
-					echo -n "${mapa[$py]:$px:1}"
-					px=$ox
-					py=$oy
-					((vida -= 3))
-					(( vida < 0 )) && vida=0
-					dvida
-					msg "Errou"
-					morte
-					return
-				fi
-				;;
+                        "!")
+                                if [[ $i -eq 3 ]]; then
+                                        tput cup $py $px
+                                        echo -n "${mapa[$py]:$px:1}"
+                                        px=$ox
+                                        py=$oy
+                                        ((vida -= 3))
+                                        (( vida < 0 )) && vida=0
+                                        dvida
+                                        msg "Errou"
+                                        morte
+                                        return
+                                fi
+                                ;;
 
                         "#")
                                 [[ $i -eq 3 ]] && break ;;
@@ -157,14 +157,14 @@ local oy=$py
                                 case "$sala:$nex,$ney" in
                                         "sala1.txt:40,4") mudar "sala2.txt" 1 4; return ;;
                                         "sala2.txt:0,4")  mudar "sala1.txt" 39 4; return ;;
-					"sala1.txt:6,0") mudar "sala3.txt" 6 7; return ;;
-					"sala3.txt:6,8") mudar "sala1.txt" 6 1; return ;;
-					"sala3.txt:2,0") mudar "sala4.txt" 2 3; return ;;
-					"sala4.txt:2,4") mudar "sala3.txt" 2 1; return ;;
-					"sala3.txt:39,0") mudar "sala4.txt" 39 3; return ;;
-					"sala4.txt:39,4") mudar "sala3.txt" 39 1; return ;;
-					"death.txt:6,13") exit 0 ;;
-					"death.txt:19,6") vida=$mvida; mudar "sala1.txt" 6 2; return ;;
+                                        "sala1.txt:6,0") mudar "sala3.txt" 6 7; return ;;
+                                        "sala3.txt:6,8") mudar "sala1.txt" 6 1; return ;;
+                                        "sala3.txt:2,0") mudar "sala4.txt" 2 3; return ;;
+                                        "sala4.txt:2,4") mudar "sala3.txt" 2 1; return ;;
+                                        "sala3.txt:39,0") mudar "sala4.txt" 39 3; return ;;
+                                        "sala4.txt:39,4") mudar "sala3.txt" 39 1; return ;;
+                                        "death.txt:6,13") exit 0 ;;
+                                        "death.txt:19,6") vida=$mvida; mudar "sala1.txt" 6 2; return ;;
                                 esac
                                 ;;
                 esac
@@ -188,14 +188,14 @@ apagar() {
 }
 
 quebrar() {
-	for (( y=0; y<${#mapa[@]}; y++ )); do
-		for (( x=0; x<${#mapa[$y]}; x++ )); do
-			if [[ "${mapa[$y]:$x:1}" == ":" ]]; then
-				apagar $x $y " "
-				printf " "
-			fi
-		done
-	done
+        for (( y=0; y<${#mapa[@]}; y++ )); do
+                for (( x=0; x<${#mapa[$y]}; x++ )); do
+                        if [[ "${mapa[$y]:$x:1}" == ":" ]]; then
+                                apagar $x $y " "
+                                printf " "
+                        fi
+                done
+        done
 }
 
 
@@ -233,10 +233,10 @@ interagir() {
                                 msg "baú está vazio"
                         fi
                         ;;
-		"?")
-			quebrar
-			msg "Você ouvi algo quebrando"
-			;;
+                "?")
+                        quebrar
+                        msg "Você ouvi algo quebrando"
+                        ;;
                 "×")
                         msg "o baú está vazio"
                         ;;
@@ -292,23 +292,23 @@ usar() {
             esac ;;
 
         "Papel")
-	    unset 'inven[$idx]'
-	    drawin
+            unset 'inven[$idx]'
+            drawin
             msg "Está escrito: 'com o F algumas paredes se tornam ar'" ;;
 
         "Pedra estranha")
-		if [[ "$alvo" == "@" ]]; then
-			apagar $vx $vy "."
-			printf "."
-			unset 'inven[$idx]'
-			drawin
-		else
-			msg "está pedra tem um formato perculiar"
-		fi
+                if [[ "$alvo" == "@" ]]; then
+                        apagar $vx $vy "."
+                        printf "."
+                        unset 'inven[$idx]'
+                        drawin
+                else
+                        msg "está pedra tem um formato perculiar"
+                fi
             ;;
 
-	"Fim")
-		msg "Obrigado por jogar S2"
+        "Fim")
+                msg "Obrigado por jogar S2"
     esac
 }
 
@@ -342,22 +342,22 @@ do
                 a|A|$'\e[D'|$'\eOD') ((newx--)); dx=-1; dy=0 ;;
                 e|E) interagir; continue ;;
                 f|F) dash; continue;;
-		r|R) menu; continue;;
+                r|R) menu; continue;;
                 1|2|3|4|5) usar "$tecla"; continue ;;
-                q|Q) break ;;
+                .) break ;;
                 *) continue ;;
         esac
 
         destino="${mapa[$newy]:$newx:1}"
 
         case "$destino" in
-		"!")
-			((vida -= 3))
-			(( vida < 0 )) && vida=0
-			dvida
-			msg "Cuidado com o buraco"
-			morte
-			;;
+                "!")
+                        ((vida -= 3))
+                        (( vida < 0 )) && vida=0
+                        dvida
+                        msg "Cuidado com o buraco"
+                        morte
+                        ;;
 
                 ".")
                         case "$sala:$newx,$newy" in
@@ -367,31 +367,31 @@ do
                         "sala2.txt:0,4")
                                 mudar "sala1.txt" 39 4
                                 continue;;
-			"sala1.txt:6,0")
-				mudar "sala3.txt" 6 7
-				continue;;
-			"sala3.txt:6,8")
-				mudar "sala1.txt" 6 1
-				continue;;
-			"sala3.txt:2,0")
-				mudar "sala4.txt" 2 3
-				continue;;
-			"sala3.txt:39,0")
-				mudar "sala4.txt" 39 3
-				continue;;
-			"sala4.txt:39,4")
-				mudar "sala3.txt" 39 1
-				continue;;
-			"sala4.txt:2,4")
-				mudar "sala3.txt" 2 1
-				continue;;
-			"death.txt:6,13")
-				break;;
-			"death.txt:19,6")
-				vida=$mvida
-				mudar "sala1.txt" 6 2
-				msg "Ih lá vamos nós!"
-				continue;;
+                        "sala1.txt:6,0")
+                                mudar "sala3.txt" 6 7
+                                continue;;
+                        "sala3.txt:6,8")
+                                mudar "sala1.txt" 6 1
+                                continue;;
+                        "sala3.txt:2,0")
+                                mudar "sala4.txt" 2 3
+                                continue;;
+                        "sala3.txt:39,0")
+                                mudar "sala4.txt" 39 3
+                                continue;;
+                        "sala4.txt:39,4")
+                                mudar "sala3.txt" 39 1
+                                continue;;
+                        "sala4.txt:2,4")
+                                mudar "sala3.txt" 2 1
+                                continue;;
+                        "death.txt:6,13")
+                                break;;
+                        "death.txt:19,6")
+                                vida=$mvida
+                                mudar "sala1.txt" 6 2
+                                msg "Ih lá vamos nós!"
+                                continue;;
                         esac
                         ;;
 
